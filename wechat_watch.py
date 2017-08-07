@@ -7,24 +7,27 @@ def login():
 
 @itchat.msg_register(itchat.content.TEXT, isGroupChat=True)
 def print_content(msg):
-    if msg['FromUserName'] != "@@8d7a36a183ea7237935d3901440f43537d87e4d35539f8b801f328cefe7df0fd":
-        return
     print(msg['Text'])
+    # for i in msg:
+    #     try:
+    #         print(i, msg[i])
+    #     except:
+    #         pass
     record_message(msg)
 
 
 def record_message(msg):
-    insert_data = [msg['MsgId'], msg['ActualUserName'], msg['ActualNickName'], msg['CreateTime']]
+    insert_data = [msg['MsgId'], msg['ActualUserName'], msg['ActualNickName'], msg['CreateTime'], msg['Text'], msg['FromUserName']]
     try:
-        cursor.execute('INSERT INTO chat VALUES (?, ?, ?, ?)', insert_data)
-        db.commit()
-    except:
+        cursor.execute('INSERT INTO chat VALUES (?, ?, ?, ?, ?, ?)', insert_data)
+    except sqlite3.IntegrityError:
         pass
+    db.commit()
 
 
 db = sqlite3.connect('chat_record.db')
 cursor = db.cursor()
 cursor.execute(
-    'create TABLE IF NOT EXISTS chat (id varchar(20) PRIMARY KEY, user_id varchar(66), nick_name varchar(10), time_stamp INTEGER)')
+    'create TABLE IF NOT EXISTS chat (id varchar(20) PRIMARY KEY, user_id varchar(66), nick_name varchar(10), time_stamp INTEGER, text varchar(256), group_id varchar(66))')
 a = login()
 a.run()
