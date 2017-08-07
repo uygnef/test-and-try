@@ -17,9 +17,9 @@ def print_content(msg):
 
 
 def record_message(msg):
-    insert_data = [msg['MsgId'], msg['ActualUserName'], msg['ActualNickName'], msg['CreateTime'], msg['Text'], msg['FromUserName']]
+    insert_data = [msg['MsgId'], msg['ActualUserName'], msg['ActualNickName'], msg['CreateTime'], msg['Text'], msg['FromUserName'], '0']
     try:
-        cursor.execute('INSERT INTO chat VALUES (?, ?, ?, ?, ?, ?)', insert_data)
+        cursor.execute('INSERT INTO chat VALUES (?, ?, ?, ?, ?, ?, ?)', insert_data)
     except sqlite3.IntegrityError:
         pass
     db.commit()
@@ -28,6 +28,6 @@ def record_message(msg):
 db = sqlite3.connect('chat_record.db')
 cursor = db.cursor()
 cursor.execute(
-    'create TABLE IF NOT EXISTS chat (id varchar(20) PRIMARY KEY, user_id varchar(66), nick_name varchar(10), time_stamp INTEGER, text varchar(256), group_id varchar(66))')
+    'create TABLE IF NOT EXISTS chat (id varchar(20) PRIMARY KEY, user_id varchar(66), nick_name varchar(10), time_stamp INTEGER, text varchar(256), group_id varchar(66), attach varchar(40))')
 a = login()
 a.run()
